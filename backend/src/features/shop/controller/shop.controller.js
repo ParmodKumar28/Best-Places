@@ -42,7 +42,13 @@ export const getShopsByAdminId = asyncHandler(async (req, res, next) => {
       return next(new ErrorHandler(400, "Please pass admin id in params!"));
     }
     const shops = await findShopsByAdminId(adminId);
-    res.status(201).json(shops);
+    if (!shops) {
+      return next(new ErrorHandler(404, "No shops added by you!"));
+    }
+    res.status(201).json({
+      shops,
+      msg: "Shops fetched!",
+    });
   } catch (error) {
     return next(new ErrorHandler(500, error.message));
   }
@@ -51,20 +57,28 @@ export const getShopsByAdminId = asyncHandler(async (req, res, next) => {
 // Controller to create a new shop
 export const createNewShop = asyncHandler(async (req, res, next) => {
   try {
-    const { name, city, mood, description, category, rating, location, items } =
-      req.body;
+    // const { name, city, mood, description, category, rating, location, items } =
+    //   req.body;
 
     // Handle uploaded images
-    const images = req.files ? req.files.map((file) => file.path) : [];
+    const images = req.files
+      ? req.files.map((file) => `http://localhost:8000/${file.path}`)
+      : [];
+
+    const location = req.body.location ? JSON.parse(req.body.location) : {};
 
     // Create a new shop
     const shop = await createShop({
       ...req.body,
+      location,
       admin: req.user._id,
       images,
     });
 
-    res.status(201).json(shop);
+    res.status(201).json({
+      shop,
+      msg: "Shop Added successfully!",
+    });
   } catch (error) {
     return next(new ErrorHandler(500, error.message));
   }

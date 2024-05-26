@@ -7,8 +7,17 @@ import { Oval } from 'react-loader-spinner'; // Import the Oval loader
 
 const ShopList = () => {
   const [shops, setShops] = useState([]);
-  const [adminName, setAdminName] = useState('');
+  const [admin, setAdmin] = useState('');
   const [loading, setLoading] = useState(true); // Add loading state
+
+  useEffect(() => {
+    const fetchAdmin = async () => {
+      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+      setAdmin(userInfo);
+    }
+
+    fetchAdmin();
+  }, [])
 
   useEffect(() => {
     const fetchShopsByAdmin = async () => {
@@ -20,11 +29,13 @@ const ShopList = () => {
           }
         });
 
-        if (response.statusText === "OK") {
-          setShops(response.data);
-          setAdminName(userInfo.username); // Set admin name
+        if (response.status === 201) {
+          console.log("Shops Data:", response.data); // Log the shops data
+          setShops(response.data.shops);
+          toast.success(response.data.msg);
         }
       } catch (error) {
+        console.error("API Error:", error); // Log any API errors
         if (error.response && error.response.data && error.response.data.error) {
           toast.error(error.response.data.error); // Display the error message in a toast
         } else {
@@ -38,6 +49,7 @@ const ShopList = () => {
     fetchShopsByAdmin();
   }, []);
 
+
   const handleUpdateShop = (id) => {
     // Handle update shop logic
     console.log('Update shop with ID:', id);
@@ -45,10 +57,9 @@ const ShopList = () => {
 
   const handleDeleteShop = async (id) => {
     try {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
       const response = await axios.delete(`${Base_Url}/shops/${id}`, {
         headers: {
-          'auth-token': `${userInfo.token}` // Send authorization token
+          'auth-token': `${admin.token}` // Send authorization token
         }
       });
 
@@ -68,7 +79,7 @@ const ShopList = () => {
   return (
     <div className="shop-container mx-auto">
       <h2 className="text-3xl mb-4 text-center">Shops Added by Admin</h2>
-      <div className="admin-name text-center">{adminName}</div> {/* Display admin name */}
+      <div className="admin-name text-center">{admin.username}</div> {/* Display admin name */}
       {loading ? ( // Render loader if loading is true
         <div className="loader-container flex justify-center items-center">
           <Oval color="#4F46E5" height={40} width={40} />
@@ -76,17 +87,25 @@ const ShopList = () => {
       ) : (
         <>
           {shops.length === 0 && <p className="no-shops text-center">No shops added by you. Add some shops!</p>}
-          <ul className="shop-list">
+          <div className="shop-list">
             {shops.map(shop => (
-              <li key={shop._id} className="shop-item">
-                <div className="shop-name">{shop.name}</div>
+              <div key={shop._id} className="shop-item">
+                <div className="shop-image">
+                  <img src={shop.images[0]} alt={shop.name} />
+                </div>
+                <div className="shop-details">
+                  <h3>{shop.name}</h3>
+                  <p><strong>Address:</strong> {shop.address}</p>
+                  <p><strong>Description:</strong> {shop.description}</p>
+                  <p><strong>Rating:</strong> {shop.rating}</p>
+                </div>
                 <div className="shop-actions">
                   <button className="update-btn" onClick={() => handleUpdateShop(shop._id)}>Update</button>
                   <button className="delete-btn" onClick={() => handleDeleteShop(shop._id)}>Delete</button>
                 </div>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         </>
       )}
     </div>

@@ -12,8 +12,8 @@ const AddShopForm = () => {
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
   const [images, setImages] = useState([]);
-  const [lat, setLat] = useState('');
-  const [lng, setLng] = useState('');
+  const [location, setLocation] = useState({ lat: "", lng: "" })
+  const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const categories = [
@@ -34,7 +34,7 @@ const AddShopForm = () => {
     setLoading(true);
     try {
       // Validate required fields
-      if (!name || !city || !address || !category || !description || !lat || !lng) {
+      if (!name || !city || !address || !category || !description || !location.lat || !location.lng) {
         toast.error("All fields are required")
         throw new Error('All fields are required');
       }
@@ -45,13 +45,12 @@ const AddShopForm = () => {
       formData.append('address', address);
       formData.append('category', category);
       formData.append('description', description);
-      formData.append('lat', lat);
-      formData.append('lng', lng);
+      formData.append('rating', rating);
+      formData.append('location', JSON.stringify(location)); // Stringify location object
       images.forEach((image) => {
         formData.append('images', image);
       });
 
-      console.log(formData);
       const userInfo = JSON.parse(localStorage.getItem('userInfo')); // Get token from localStorage
       const response = await axios.post(`${Base_Url}/shops`, formData, {
         headers: {
@@ -60,9 +59,8 @@ const AddShopForm = () => {
         },
       });
 
-      if (response.statusText === "OK") {
-        console.log(`response : ${response}`);
-        toast.success('Shop added successfully!');
+      if (response.status === 201) {
+        toast.success(response.data.msg);
         // Reset form fields
         setName('');
         setCity('');
@@ -70,8 +68,7 @@ const AddShopForm = () => {
         setCategory('');
         setDescription('');
         setImages([]);
-        setLat('');
-        setLng('');
+        setLocation({ lat: "", lng: "" }); // Reset location state
       }
 
     } catch (error) {
@@ -85,6 +82,7 @@ const AddShopForm = () => {
     }
   };
 
+
   const handleImageChange = (e) => {
     if (images.length < 5) {
       setImages([...images, ...Array.from(e.target.files)]);
@@ -95,6 +93,19 @@ const AddShopForm = () => {
 
   const removeImage = (index) => {
     setImages(images.filter((_, i) => i !== index));
+  };
+
+  // Update location state when latitude or longitude changes
+  const handleLatChange = (e) => {
+    setLocation({ ...location, lat: e.target.value });
+  };
+
+  const handleLngChange = (e) => {
+    setLocation({ ...location, lng: e.target.value });
+  };
+
+  const handleRatingChange = (value) => {
+    setRating(value);
   };
 
   return (
@@ -115,6 +126,23 @@ const AddShopForm = () => {
             required
             className="mt-1 p-2 w-full border-gray-300 rounded-md shadow-sm focus:outline-indigo-400 text-indigo-600 focus:ring-indigo-500 focus:border-indigo-500"
           />
+        </div>
+        <div>
+          <label htmlFor="rating" className="block text-sm font-medium text-gray-700">
+            Rating
+          </label>
+          <div className="flex items-center">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                className={`text-3xl ${star <= rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                onClick={() => handleRatingChange(star)}
+              >
+                &#9733;
+              </button>
+            ))}
+          </div>
         </div>
         <div>
           <label htmlFor="city" className="block text-sm font-medium text-gray-700">
@@ -214,8 +242,8 @@ const AddShopForm = () => {
           <input
             type="number"
             id="lat"
-            value={lat}
-            onChange={(e) => setLat(e.target.value)}
+            value={location.lat}
+            onChange={handleLatChange}
             placeholder="Enter latitude"
             className="mt-1 p-2 w-full border-gray-300 rounded-md shadow-sm focus:outline-indigo-400 text-indigo-600 focus:ring-indigo-500 focus:border-indigo-500"
           />
@@ -227,8 +255,8 @@ const AddShopForm = () => {
           <input
             type="number"
             id="lng"
-            value={lng}
-            onChange={(e) => setLng(e.target.value)}
+            value={location.lng}
+            onChange={handleLngChange}
             placeholder="Enter longitude"
             className="mt-1 p-2 w-full border-gray-300 rounded-md shadow-sm focus:outline-indigo-400 text-indigo-600 focus:ring-indigo-500 focus:border-indigo-500"
           />
