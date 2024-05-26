@@ -1,8 +1,8 @@
 // controllers/userController.js
 import jwt from "jsonwebtoken";
 import asyncHandler from "express-async-handler";
-import bcrypt from "bcryptjs";
-import { createUser, findByEmail, findById } from "../model/user.repository.js";
+import bcrypt from "bcrypt";
+import { createUser, findByEmail, findById } from "../model/user.respository.js";
 import { ErrorHandler } from "../../../utils/ErrorHandler.js";
 
 // Function to generate a JWT token

@@ -4,7 +4,7 @@ import "./envConfig.js";
 // Imports
 import express from "express";
 import connectDb from "./db/dbConfig.js";
-import { errorHandler, errorHandlerMiddleware, notFound } from "./src/middleware/errorHandler.js";
+import { errorHandlerMiddleware, notFound } from "./src/middleware/errorHandlerMiddleware.js";
 import userRouter from "./src/features/users/routes/user.routes.js";
 import shopRouter from "./src/features/shop/routes/shop.routes.js";
 import path from "path";

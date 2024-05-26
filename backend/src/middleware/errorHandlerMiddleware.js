@@ -1,5 +1,5 @@
 // middleware/errorMiddleware.js
-const notFound = (req, res, next) => {
+export const notFound = (req, res, next) => {
   const error = new Error(`Not Found - ${req.originalUrl}`);
   res.status(404);
   next(error);
@@ -7,7 +7,7 @@ const notFound = (req, res, next) => {
 
 export const errorHandlerMiddleware = (err, req, res, next) => {
   // Log the error here first for better approach
-  console.log(err);
+  // console.log(err);
   err.message = err.message || "Internal server error!";
   err.statusCode = err.statusCode || 500;
   res.status(err.statusCode).json({
@@ -15,5 +15,3 @@ export const errorHandlerMiddleware = (err, req, res, next) => {
     error: err.message,
   });
 };
-
-export { notFound, errorHandlerMiddleware };

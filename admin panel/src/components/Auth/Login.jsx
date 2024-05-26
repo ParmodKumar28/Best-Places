@@ -1,34 +1,59 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Oval } from 'react-loader-spinner';
+import Base_Url from '../../services/api';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false); // Updated to boolean
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Show loader
     try {
-      const { data } = await axios.post('http://localhost:8000/api/users/login', { email, password });
-      localStorage.setItem('userInfo', JSON.stringify(data));
-      toast.success('Login successful!');
-      navigate('/');
-
-      // Clear field's
-      setEmail("");
-      setPassword("");
+      const response = await axios.post(`${Base_Url}/users/login`, { email, password });
+      if (response.statusText === "OK") {
+        localStorage.setItem('userInfo', JSON.stringify(response.data));
+        toast.success('Login successful!');
+        navigate('/');
+        // Clear fields
+        setEmail('');
+        setPassword('');
+      }
     } catch (error) {
-      toast.error('Invalid email or password');
+      if (error.response && error.response.data && error.response.data.error) {
+        toast.error(error.response.data.error); // Display the error message in a toast
+      } else {
+        toast.error("An error occurred. Please try again later.");
+      }
+    } finally {
+      setLoading(false); // Hide loader
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <ToastContainer />
-      <div className="bg-white rounded-lg shadow-md p-6 w-80">
+      <div className="bg-white rounded-lg shadow-md p-6 w-80 relative">
+        {loading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
+            <Oval
+              height={40}
+              width={40}
+              color="#4F46E5"
+              visible={true}
+              ariaLabel="oval-loading"
+              secondaryColor="#a0a0a0"
+              strokeWidth={2}
+              strokeWidthSecondary={2}
+            />
+          </div>
+        )}
         <h2 className="text-3xl font-semibold mb-4 text-center">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">

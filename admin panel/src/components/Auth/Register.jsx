@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Oval } from 'react-loader-spinner';
+import Base_Url from '../../services/api';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -16,23 +18,30 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const { data } = await axios.post('http://localhost:8000/api/users/register', {
+      const response = await axios.post(`${Base_Url}/users/register`, {
         username,
         email,
         password,
         isAdmin: true
       });
-      localStorage.setItem('userInfo', JSON.stringify(data));
-      toast.success('Registration successful!');
-      navigate('/');
 
-      // Clear field's
-      setUsername("");
-      setEmail("");
-      setPassword("");
+      if (response.statusText === "OK") {
+        localStorage.setItem('userInfo', JSON.stringify(response.data));
+        toast.success('Registration successful!');
+        navigate('/');
+
+        // Clear fields
+        setUsername("");
+        setEmail("");
+        setPassword("");
+      }
+
     } catch (error) {
-      toast.error('Error registering user');
-      console.log(error);
+      if (error.response && error.response.data && error.response.data.error) {
+        toast.error(error.response.data.error); // Display the error message in a toast
+      } else {
+        toast.error("An error occurred. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }
@@ -41,7 +50,21 @@ const Register = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <ToastContainer />
-      <div className="bg-white rounded-lg shadow-md p-6 w-80">
+      <div className="bg-white rounded-lg shadow-md p-6 w-80 relative">
+        {loading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
+            <Oval
+              height={40}
+              width={40}
+              color="#4F46E5"
+              visible={true}
+              ariaLabel="oval-loading"
+              secondaryColor="#a0a0a0"
+              strokeWidth={2}
+              strokeWidthSecondary={2}
+            />
+          </div>
+        )}
         <h2 className="text-3xl font-semibold mb-4 text-center">Register</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
