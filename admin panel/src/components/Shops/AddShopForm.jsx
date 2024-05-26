@@ -3,6 +3,7 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Base_Url from '../../services/api';
+import { Oval } from 'react-loader-spinner'; // Import the Oval loader
 
 const AddShopForm = () => {
   const [name, setName] = useState('');
@@ -237,7 +238,7 @@ const AddShopForm = () => {
           className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 w-full"
           disabled={loading}
         >
-          {loading ? 'Adding...' : 'Add Shop'}
+          {loading ? <Oval color="#FFF" height={20} width={20} className="absolute inset-0 m-auto" /> : 'Add Shop'}
         </button>
       </form>
     </div>
