@@ -4,7 +4,7 @@ import "./envConfig.js";
 // Imports
 import express from "express";
 import connectDb from "./db/dbConfig.js";
-import { errorHandler, notFound } from "./src/middleware/errorHandler.js";
+import { errorHandler, errorHandlerMiddleware, notFound } from "./src/middleware/errorHandler.js";
 import userRouter from "./src/features/users/routes/user.routes.js";
 import shopRouter from "./src/features/shop/routes/shop.routes.js";
 import path from "path";
@@ -36,7 +36,7 @@ app.use("/api/shops", shopRouter); // Add shop routes
 app.use(notFound);
 
 // Use the errorHandler middleware for handling errors
-app.use(errorHandler);
+app.use(errorHandlerMiddleware);
 
 // Listening to server
 app.listen(process.env.PORT, (err) => {

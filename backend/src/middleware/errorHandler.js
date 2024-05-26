@@ -5,13 +5,15 @@ const notFound = (req, res, next) => {
   next(error);
 };
 
-const errorHandler = (err, req, res, next) => {
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-  res.status(statusCode);
-  res.json({
-    message: err.message,
-    stack: process.env.NODE_ENV === "production" ? null : err.stack,
+export const errorHandlerMiddleware = (err, req, res, next) => {
+  // Log the error here first for better approach
+  console.log(err);
+  err.message = err.message || "Internal server error!";
+  err.statusCode = err.statusCode || 500;
+  res.status(err.statusCode).json({
+    success: false,
+    error: err.message,
   });
 };
 
-export { notFound, errorHandler };
+export { notFound, errorHandlerMiddleware };
