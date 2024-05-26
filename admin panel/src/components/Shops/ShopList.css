@@ -1,69 +1,123 @@
+/* ShopList.css */
+
 .shop-container {
-    padding: 20px;
+  padding: 20px;
+}
+
+.admin-name {
+  font-size: 24px;
+  color: #2899c9;
+  margin-bottom: 10px;
+  animation: fadeInUp 1s ease;
+}
+
+.no-shops {
+  font-size: 18px;
+  color: #777;
+  animation: fadeInUp 1s ease;
+}
+
+.shop-list {
+  list-style: none;
+  padding: 0;
+}
+
+.shop-item {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: fadeInUp 1s ease;
+}
+
+.shop-name {
+  font-size: 24px;
+  color: #333;
+}
+
+.shop-details {
+  font-size: 16px;
+  color: #555;
+}
+
+.shop-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.update-btn,
+.delete-btn {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.update-btn:hover,
+.delete-btn:hover {
+  background-color: #45a049;
+}
+
+/* Define styles for filled and empty stars */
+.star-filled,
+.star-empty {
+  font-size: 35px;
+}
+
+/* Define styles for filled stars */
+.star-filled {
+  color: gold;
+}
+
+/* Define styles for empty stars */
+.star-empty {
+  color: #ccc;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Styles */
+
+@media (max-width: 768px) {
   .admin-name {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 10px;
-    animation: fadeInUp 1s ease;
+    font-size: 20px;
   }
-  
+
   .no-shops {
-    font-size: 18px;
-    color: #777;
-    animation: fadeInUp 1s ease;
+    font-size: 16px;
   }
-  
-  .shop-list {
-    list-style: none;
-    padding: 0;
-  }
-  
+
   .shop-item {
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    padding: 10px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    animation: fadeInUp 1s ease;
+    padding: 15px;
+    flex-direction: column;
   }
-  
+
   .shop-name {
     font-size: 20px;
   }
-  
-  .shop-actions {
-    display: flex;
+
+  .shop-details {
+    font-size: 14px;
   }
-  
+
   .update-btn,
   .delete-btn {
-    padding: 5px 10px;
-    margin-left: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    padding: 8px 16px;
+    font-size: 14px;
   }
-  
-  .update-btn:hover,
-  .delete-btn:hover {
-    background-color: #0056b3;
-  }
-  
-  @keyframes fadeInUp {
-    0% {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
+}

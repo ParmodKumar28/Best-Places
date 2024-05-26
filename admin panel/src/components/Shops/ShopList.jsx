@@ -76,6 +76,18 @@ const ShopList = () => {
     }
   };
 
+  // Inside ShopList.js
+  // Modify the renderStars function to use the correct Unicode character
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      // Use the Unicode character for a filled star (★) and empty star (☆)
+      stars.push(<span key={i} className={i <= rating ? "star-filled" : "star-empty"}>{i <= rating ? '★' : '☆'}</span>);
+    }
+    return stars;
+  };
+
+
   return (
     <div className="shop-container mx-auto">
       <h2 className="text-3xl mb-4 text-center">Shops Added by Admin</h2>
@@ -94,10 +106,10 @@ const ShopList = () => {
                   <img src={shop.images[0]} alt={shop.name} />
                 </div>
                 <div className="shop-details">
-                  <h3>{shop.name}</h3>
+                  <h3 className='text-xl my-1 md:text-6xl md:mb-6 text-green-600'>{shop.name}</h3>
                   <p><strong>Address:</strong> {shop.address}</p>
                   <p><strong>Description:</strong> {shop.description}</p>
-                  <p><strong>Rating:</strong> {shop.rating}</p>
+                  <p><strong>Rating:</strong> {renderStars(shop.rating)}</p> {/* Render stars for rating */}
                 </div>
                 <div className="shop-actions">
                   <button className="update-btn" onClick={() => handleUpdateShop(shop._id)}>Update</button>
