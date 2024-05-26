@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Base_Url from '../../services/api';
 
 const AddShopForm = () => {
   const [name, setName] = useState('');
@@ -32,7 +33,7 @@ const AddShopForm = () => {
     setLoading(true);
     try {
       // Validate required fields
-      if (!name || !city || !address || !category || !description || !lat || !lng ) {
+      if (!name || !city || !address || !category || !description || !lat || !lng) {
         toast.error("All fields are required")
         throw new Error('All fields are required');
       }
@@ -51,27 +52,33 @@ const AddShopForm = () => {
 
       console.log(formData);
       const userInfo = JSON.parse(localStorage.getItem('userInfo')); // Get token from localStorage
-      const response = await axios.post('http://localhost:8000/api/shops', formData, {
+      const response = await axios.post(`${Base_Url}/shops`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'auth-token': `${userInfo.token}`, // Include token in the request headers
         },
       });
 
-      console.log(`response : ${response}`);
-      toast.success('Shop added successfully!');
-      // Reset form fields
-      setName('');
-      setCity('');
-      setAddress('');
-      setCategory('');
-      setDescription('');
-      setImages([]);
-      setLat('');
-      setLng('');
+      if (response.statusText === "OK") {
+        console.log(`response : ${response}`);
+        toast.success('Shop added successfully!');
+        // Reset form fields
+        setName('');
+        setCity('');
+        setAddress('');
+        setCategory('');
+        setDescription('');
+        setImages([]);
+        setLat('');
+        setLng('');
+      }
+
     } catch (error) {
-      console.error('Error adding shop:', error.response ? error.response.data : error.message);
-      toast.error(error.response && error.response.data.message ? error.response.data.message : 'Error adding shop');
+      if (error.response && error.response.data && error.response.data.error) {
+        toast.error(error.response.data.error); // Display the error message in a toast
+      } else {
+        toast.error("An error occurred. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }

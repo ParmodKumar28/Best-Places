@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './ShopList.css'; // Import your CSS file for styling
+import Base_Url from '../../services/api';
+import { toast } from 'react-toastify';
 
 const ShopList = () => {
   const [shops, setShops] = useState([]);
@@ -10,17 +12,27 @@ const ShopList = () => {
     const fetchShopsByAdmin = async () => {
       try {
         const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-        const response = await axios.get(`http://localhost:8000/api/shops/admin/${userInfo._id}`, {
+        const response = await axios.get(`${Base_Url}/shops/admin/${userInfo._id}`, {
           headers: {
             'auth-token': `${userInfo.token}` // Send authorization token
           }
         });
-        setShops(response.data);
-        setAdminName(userInfo.username); // Set admin name
+
+        if (response.statusText === "OK") {
+          setShops(response.data);
+          setAdminName(userInfo.username); // Set admin name
+        }
+
       } catch (error) {
-        console.error('Error fetching shops:', error);
+        if (error.response && error.response.data && error.response.data.error) {
+          toast.error(error.response.data.error); // Display the error message in a toast
+        } else {
+          toast.error("An error occurred. Please try again later.");
+        }
       }
     };
+
+
     fetchShopsByAdmin();
   }, []);
 
@@ -32,15 +44,23 @@ const ShopList = () => {
   const handleDeleteShop = async (id) => {
     try {
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      await axios.delete(`http://localhost:8000/api/shops/${id}`, {
+      const response = await axios.delete(`${Base_Url}/shops/${id}`, {
         headers: {
           'auth-token': `${userInfo.token}` // Send authorization token
         }
       });
-      // Remove deleted shop from the state
-      setShops(shops.filter(shop => shop._id !== id));
+
+      if (response.statusText === "OK") {
+        // Remove deleted shop from the state
+        setShops(shops.filter(shop => shop._id !== id));
+      }
+
     } catch (error) {
-      console.error('Error deleting shop:', error);
+      if (error.response && error.response.data && error.response.data.error) {
+        toast.error(error.response.data.error); // Display the error message in a toast
+      } else {
+        toast.error("An error occurred. Please try again later.");
+      }
     }
   };
 
