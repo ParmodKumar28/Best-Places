@@ -68,6 +68,12 @@ const AdminProfilePage = () => {
             });
 
             if (response.status === 200 || response.status === 201) {
+                const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+                // Update profile picture URL in userInfo object
+                userInfo.profile = response.data.user.profile;
+                // Update userInfo object in localStorage
+                localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
                 setAdmin(response.data.user);
                 setPreviewImage(null);
                 setNewProfileImage(null);

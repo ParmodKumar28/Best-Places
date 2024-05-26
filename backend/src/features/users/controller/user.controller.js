@@ -47,6 +47,7 @@ export const authUser = async (req, res, next) => {
         _id: user._id,
         username: user.username,
         email: user.email,
+        profile: user.profile,
         isAdmin: user.isAdmin,
         token: generateToken(user._id),
       });
@@ -88,6 +89,7 @@ export const registerUser = asyncHandler(async (req, res, next) => {
       username: user.username,
       email: user.email,
       isAdmin: user.isAdmin,
+      profile: user.profile,
       token: generateToken(user._id),
       msg: "User Registered!",
     });

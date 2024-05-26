@@ -10,16 +10,24 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('userInfo');
-    toast.success("Logout Successful!")
+    toast.success("Logout Successful!");
     navigate('/login');
   };
 
   return (
     <header className="bg-gray-800 text-white py-5 px-4 md:px-10">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between">
-        <div className="flex items-center">
+        <div className="flex items-center justify-between w-full md:w-auto">
           <Link to="/" className="text-xl font-semibold md:mr-10">Best Places</Link>
-          <Menu className="block md:hidden cursor-pointer" onClick={() => setShowMenu(!showMenu)} />
+          {userInfo && (
+            <div className="flex items-center md:hidden">
+              <img className='w-10 h-10 rounded-full mr-2' src={userInfo.profile} alt="User" />
+              <p className="text-lg">Welcome, {userInfo.username}</p>
+            </div>
+          )}
+          <div className="md:hidden cursor-pointer" onClick={() => setShowMenu(!showMenu)}>
+            {showMenu ? <X /> : <Menu />}
+          </div>
         </div>
         <nav className={`mt-4 md:mt-0 ${showMenu ? 'block' : 'hidden'} md:block`}>
           <ul className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
@@ -42,10 +50,15 @@ const Header = () => {
             )}
           </ul>
         </nav>
+        {userInfo && (
+          <div className="hidden md:flex items-center">
+            <img className='w-12 h-12 rounded-full mr-2' src={userInfo.profile} alt="User" />
+            <p className="text-lg">Welcome, {userInfo.username}</p>
+          </div>
+        )}
       </div>
     </header>
   );
-
 };
 
 export default Header;

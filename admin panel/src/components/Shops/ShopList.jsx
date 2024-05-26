@@ -33,7 +33,7 @@ const ShopList = () => {
         if (response.status === 201) {
           // console.log("Shops Data:", response.data); // Log the shops data
           setShops(response.data.shops);
-          toast.success(response.data.msg);
+          // toast.success(response.data.msg);
         }
       } catch (error) {
         // console.error("API Error:", error); // Log any API errors
