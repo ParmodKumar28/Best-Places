@@ -6,11 +6,15 @@ import AddShopForm from './components/Shops/AddShopForm';
 import HomePage from './pages/Home';
 import Header from './components/Layout/Header';
 import ShopListPage from './pages/ShopList';
+import AdminProfilePage from './pages/AdminProfilePage';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const App = () => {
   return (
     <Router>
+      <ToastContainer />
       <Header />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
@@ -19,6 +23,7 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path='/shops' element={<ShopListPage />} />
           <Route path="/add-shop" element={<AddShopForm />} />
+          <Route path="/profile" element={<AdminProfilePage />} />
         </Route>
       </Routes>
     </Router>

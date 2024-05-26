@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast} from 'react-toastify';
 import Base_Url from '../../services/api';
 import { Oval } from 'react-loader-spinner'; // Import the Oval loader
 
@@ -110,7 +109,6 @@ const AddShopForm = () => {
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-      <ToastContainer />
       <h2 className="text-2xl font-semibold mb-4 text-center">Add Shop</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

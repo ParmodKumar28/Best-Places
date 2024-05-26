@@ -31,6 +31,12 @@ const HomePage = () => {
           >
             View Shops
           </Link>
+          <Link
+            to="/profile"
+            className="bg-yellow-500 hover:bg-yellow-600 text-white py-3 px-6 rounded-full transition duration-300 ease-in-out flex-1 md:flex-none"
+          >
+            Profile
+          </Link> {/* Add link to profile page */}
         </div>
       )}
     </div>

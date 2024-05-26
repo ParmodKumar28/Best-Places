@@ -8,7 +8,7 @@ export const findByEmail = async (email) => {
 
 // Function to find a user by ID
 export const findById = async (id) => {
-  return await User.findById(id);
+  return await User.findById(id).populate("shops");
 };
 
 // Function to create a new user

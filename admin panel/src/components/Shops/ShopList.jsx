@@ -4,6 +4,7 @@ import './ShopList.css'; // Import your CSS file for styling
 import Base_Url from '../../services/api';
 import { toast } from 'react-toastify';
 import { Oval } from 'react-loader-spinner'; // Import the Oval loader
+import { format } from 'date-fns'; // Import date-fns for date formatting
 
 const ShopList = () => {
   const [shops, setShops] = useState([]);
@@ -14,10 +15,10 @@ const ShopList = () => {
     const fetchAdmin = async () => {
       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
       setAdmin(userInfo);
-    }
+    };
 
     fetchAdmin();
-  }, [])
+  }, []);
 
   useEffect(() => {
     const fetchShopsByAdmin = async () => {
@@ -30,12 +31,12 @@ const ShopList = () => {
         });
 
         if (response.status === 201) {
-          console.log("Shops Data:", response.data); // Log the shops data
+          // console.log("Shops Data:", response.data); // Log the shops data
           setShops(response.data.shops);
           toast.success(response.data.msg);
         }
       } catch (error) {
-        console.error("API Error:", error); // Log any API errors
+        // console.error("API Error:", error); // Log any API errors
         if (error.response && error.response.data && error.response.data.error) {
           toast.error(error.response.data.error); // Display the error message in a toast
         } else {
@@ -48,7 +49,6 @@ const ShopList = () => {
 
     fetchShopsByAdmin();
   }, []);
-
 
   const handleUpdateShop = (id) => {
     // Handle update shop logic
@@ -63,7 +63,8 @@ const ShopList = () => {
         }
       });
 
-      if (response.statusText === "OK") {
+      if (response.status === 200) {
+        toast.success(response.data.msg);
         // Remove deleted shop from the state
         setShops(shops.filter(shop => shop._id !== id));
       }
@@ -76,17 +77,13 @@ const ShopList = () => {
     }
   };
 
-  // Inside ShopList.js
-  // Modify the renderStars function to use the correct Unicode character
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
-      // Use the Unicode character for a filled star (★) and empty star (☆)
       stars.push(<span key={i} className={i <= rating ? "star-filled" : "star-empty"}>{i <= rating ? '★' : '☆'}</span>);
     }
     return stars;
   };
-
 
   return (
     <div className="shop-container mx-auto">
@@ -110,6 +107,7 @@ const ShopList = () => {
                   <p><strong>Address:</strong> {shop.address}</p>
                   <p><strong>Description:</strong> {shop.description}</p>
                   <p><strong>Rating:</strong> {renderStars(shop.rating)}</p> {/* Render stars for rating */}
+                  <p><strong>Shop added on:</strong> {format(new Date(shop.createdAt), 'MMM dd, yyyy')}</p> {/* Display shop added date */}
                 </div>
                 <div className="shop-actions">
                   <button className="update-btn" onClick={() => handleUpdateShop(shop._id)}>Update</button>

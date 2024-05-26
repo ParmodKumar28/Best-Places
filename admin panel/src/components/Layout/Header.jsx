@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'react-feather'; // Import Menu and X icons from Feather Icons
+import { toast } from 'react-toastify';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -9,6 +10,7 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('userInfo');
+    toast.success("Logout Successful!")
     navigate('/login');
   };
 
@@ -17,16 +19,15 @@ const Header = () => {
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between">
         <div className="flex items-center">
           <Link to="/" className="text-xl font-semibold md:mr-10">Best Places</Link>
-          {/* Show Menu icon on mobile, Hide on desktop */}
           <Menu className="block md:hidden cursor-pointer" onClick={() => setShowMenu(!showMenu)} />
         </div>
-        {/* Show menu items on mobile when `showMenu` is true */}
         <nav className={`mt-4 md:mt-0 ${showMenu ? 'block' : 'hidden'} md:block`}>
           <ul className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
             {userInfo ? (
               <>
                 <li><Link to="/shops" className="hover:text-gray-300">Shops</Link></li>
                 <li><Link to="/add-shop" className="hover:text-gray-300">Add Shop</Link></li>
+                <li><Link to="/profile" className="hover:text-gray-300">Profile</Link></li> {/* Add link to profile page */}
                 <li>
                   <button onClick={handleLogout} className="hover:text-gray-300">
                     Logout
@@ -44,6 +45,7 @@ const Header = () => {
       </div>
     </header>
   );
+
 };
 
 export default Header;

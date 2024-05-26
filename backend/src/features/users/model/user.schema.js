@@ -3,12 +3,25 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
 // Define user schema
-const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  isAdmin: { type: Boolean, default: false },
-});
+const userSchema = new mongoose.Schema(
+  {
+    profile: {
+      type: String,
+      default: "https://cdn-icons-png.flaticon.com/128/5061/5061463.png",
+    },
+    username: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    shops: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Shop",
+      },
+    ],
+    isAdmin: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
 
 // Middleware to hash password before saving
 userSchema.pre("save", async function (next) {

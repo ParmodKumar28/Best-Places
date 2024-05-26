@@ -2,7 +2,11 @@
 import jwt from "jsonwebtoken";
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
-import { createUser, findByEmail, findById } from "../model/user.respository.js";
+import {
+  createUser,
+  findByEmail,
+  findById,
+} from "../model/user.respository.js";
 import { ErrorHandler } from "../../../utils/ErrorHandler.js";
 
 // Function to generate a JWT token
@@ -85,6 +89,7 @@ export const registerUser = asyncHandler(async (req, res, next) => {
       email: user.email,
       isAdmin: user.isAdmin,
       token: generateToken(user._id),
+      msg: "User Registered!",
     });
   } catch (error) {
     return next(new ErrorHandler(400, error.message));
@@ -104,10 +109,7 @@ export const getUserProfile = asyncHandler(async (req, res, next) => {
 
     // Return the user profile
     res.status(200).json({
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-      isAdmin: user.isAdmin,
+      user,
     });
   } catch (error) {
     return next(new ErrorHandler(400, error.message));
@@ -140,11 +142,34 @@ export const updateUserProfile = asyncHandler(async (req, res, next) => {
 
     // Return the updated user profile with a new JWT token
     res.status(201).json({
-      _id: updatedUser._id,
-      username: updatedUser.username,
-      email: updatedUser.email,
-      isAdmin: updatedUser.isAdmin,
-      token: generateToken(updatedUser._id),
+      user: updatedUser,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(400, error.message));
+  }
+});
+
+// Controller to update user profile picture
+export const updateUserProfilePicture = asyncHandler(async (req, res, next) => {
+  try {
+    // Find the user by ID
+    const user = await findById(req.user._id);
+
+    // Check if user exists
+    if (!user) {
+      return next(new ErrorHandler(404, "User not found"));
+    }
+
+    // Update profile picture URL with the new value
+    user.profile = `http://localhost:8000/${req.file.path}` || user.profile; // Use the path of the uploaded file
+
+    // Save the updated user
+    const updatedUser = await user.save();
+
+    // Return the updated user profile
+    res.status(201).json({
+      user: updatedUser,
+      msg: "Profile picture updated!",
     });
   } catch (error) {
     return next(new ErrorHandler(400, error.message));

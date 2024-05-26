@@ -5,8 +5,10 @@ import {
   registerUser,
   getUserProfile,
   updateUserProfile,
+  updateUserProfilePicture,
 } from "../controller/user.controller.js";
 import { protect } from "../../../middleware/authMiddleware.js";
+import upload from "../../../middleware/uploadMiddleware.js";
 
 const userRouter = express.Router();
 
@@ -21,5 +23,13 @@ userRouter
   .route("/profile")
   .get(protect, getUserProfile) // Protected route to get user profile
   .put(protect, updateUserProfile); // Protected route to update user profile
+
+// Route for updating user profile picture
+userRouter.put(
+  "/profile/picture",
+  protect,
+  upload.single("profilePicture"), // Use Multer middleware for single file upload
+  updateUserProfilePicture
+);
 
 export default userRouter;

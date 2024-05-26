@@ -133,8 +133,8 @@ export const deleteShopById = asyncHandler(async (req, res, next) => {
   try {
     const shop = await findShopById(req.params.id);
     if (shop) {
-      await deleteShop(req.params.id);
-      res.status(200).json({ message: "Shop removed" });
+      await deleteShop(req.params.id, req.user._id);
+      return res.status(200).json({ msg: "Shop removed" });
     } else {
       return next(new ErrorHandler(404, "Shop not found"));
     }
