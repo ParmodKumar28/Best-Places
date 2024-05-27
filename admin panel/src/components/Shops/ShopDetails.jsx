@@ -52,7 +52,7 @@ const ShopDetails = () => {
           </div>
         </div>
         <div className="p-6">
-          <p className="text-lg text-gray-800 mb-4">{shop.description}</p>
+          <p className="text-2xl text-green-800 mb-6">{shop.description}</p>
           <div className="flex flex-wrap gap-4 mb-4">
             {shop.images.map((image, index) => (
               <img key={index} src={image} alt={`Image ${index}`} className="w-32 h-32 object-cover rounded-lg shadow-md transition-transform transform hover:scale-105" />

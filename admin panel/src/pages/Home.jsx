@@ -23,7 +23,7 @@ const HomePage = () => {
             />
           )}
           <p className="text-xl">
-            Hello, <span className="text-green-500">{adminName}</span>! You're logged in as an admin.
+            Hello, <span className="text-green-500">{adminName}</span>! You&apos;re logged in as an admin.
           </p>
         </div>
       )}

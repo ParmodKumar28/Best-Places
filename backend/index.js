@@ -30,7 +30,7 @@ app.get("/", (req, res, next) => {
 });
 
 app.use("/api/users", userRouter);
-app.use("/api/shops", shopRouter); // Add shop routes
+app.use("/api/shops", shopRouter);
 
 // Use the notFound middleware for handling 404 errors
 app.use(notFound);
