@@ -10,6 +10,7 @@ import AdminProfilePage from './pages/AdminProfilePage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UpdateShop from './components/Shops/UpdateShop';
+import ShopDetails from './components/Shops/ShopDetails';
 
 
 const App = () => {
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/add-shop" element={<AddShopForm />} />
           <Route path="/profile" element={<AdminProfilePage />} />
           <Route path="/shops/update/:shopId" element={<UpdateShop />} />
+          <Route path='/shop/:id' element={<ShopDetails/>}/>
         </Route>
       </Routes>
     </Router>

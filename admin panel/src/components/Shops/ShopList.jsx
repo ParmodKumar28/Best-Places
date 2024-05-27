@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './ShopList.css'; // Import your CSS file for styling
 import Base_Url from '../../services/api';
@@ -101,7 +101,9 @@ const ShopList = () => {
             {shops.map(shop => (
               <div key={shop._id} className="shop-item">
                 <div className="shop-image">
+                  <Link to={`/shop/${shop._id}`}>
                   <img src={shop.images[0]} alt={shop.name} />
+                  </Link>
                 </div>
                 <div className="shop-details">
                   <h3 className='text-xl my-1 md:text-6xl md:mb-6 text-green-600'>{shop.name}</h3>
