@@ -4,12 +4,15 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Oval } from 'react-loader-spinner';
 import Base_Url from '../../services/api';
+import { FaEye } from "react-icons/fa";
+import { RiEyeCloseFill } from "react-icons/ri";
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [passwordVisible, setPaswordVisible] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -91,21 +94,32 @@ const Register = () => {
               required
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 relative">
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password
             </label>
             <input
-              type="password"
+              type={passwordVisible ? "text" : "password"}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 p-2 w-full border rounded-md shadow-sm focus:outline-indigo-400 focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 p-2 select-none w-full border rounded-md shadow-sm focus:outline-indigo-400 focus:ring-indigo-500 focus:border-indigo-500"
               required
               minLength={8} // Minimum password length
             />
-            {/* Password strength meter (you can use a library for this) */}
-            {/* Display strength feedback based on password complexity */}
+            {passwordVisible ? (
+              <RiEyeCloseFill
+                className="absolute right-3 top-8 cursor-pointer text-gray-700"
+                size={24}
+                onClick={() => setPaswordVisible(false)}
+              />
+            ) : (
+              <FaEye
+                className="absolute right-3 top-8 cursor-pointer text-gray-700"
+                size={24}
+                onClick={() => setPaswordVisible(true)}
+              />
+            )}
           </div>
           <button
             type="submit"

@@ -87,36 +87,38 @@ export const createNewShop = asyncHandler(async (req, res, next) => {
 // Controller to update a shop
 export const updateShopById = asyncHandler(async (req, res, next) => {
   try {
+    console.log(req.params.id);
     const shop = await findShopById(req.params.id);
     if (shop) {
-      const {
-        name,
-        city,
-        mood,
-        description,
-        category,
-        rating,
-        location,
-        items,
-      } = req.body;
+      // const {
+      //   name,
+      //   city,
+      //   mood,
+      //   description,
+      //   category,
+      //   rating,
+      //   location,
+      //   items,
+      // } = req.body;
 
       // Handle uploaded images, or keep existing images if none are provided
-      const images =
-        req.files && req.files.length > 0
-          ? req.files.map((file) => file.path)
-          : shop.images;
+      // const images =
+      //   req.files && req.files.length > 0
+      //     ? req.files.map((file) => file.path)
+      //     : shop.images;
+
+      const images = req.files
+        ? req.files.map((file) => `http://localhost:8000/${file.path}`)
+        : [];
+
+      const location = req.body.location ? JSON.parse(req.body.location) : {};
 
       // Update shop details
       const updatedShop = await updateShop(req.params.id, {
-        name,
-        city,
-        mood,
-        description,
-        category,
-        rating,
-        images,
+        ...req.body,
         location,
-        items,
+        admin: req.user._id,
+        images,
       });
 
       res.status(201).json(updatedShop);

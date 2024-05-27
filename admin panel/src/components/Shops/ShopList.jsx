@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './ShopList.css'; // Import your CSS file for styling
 import Base_Url from '../../services/api';
@@ -10,6 +11,7 @@ const ShopList = () => {
   const [shops, setShops] = useState([]);
   const [admin, setAdmin] = useState('');
   const [loading, setLoading] = useState(true); // Add loading state
+  const navigate = useNavigate(); // Use useNavigate hook
 
   useEffect(() => {
     const fetchAdmin = async () => {
@@ -51,8 +53,7 @@ const ShopList = () => {
   }, []);
 
   const handleUpdateShop = (id) => {
-    // Handle update shop logic
-    console.log('Update shop with ID:', id);
+    navigate(`/shops/update/${id}`);
   };
 
   const handleDeleteShop = async (id) => {

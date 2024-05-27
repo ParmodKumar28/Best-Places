@@ -14,8 +14,8 @@ import upload from "../../../middleware/uploadMiddleware.js";
 const shopRouter = express.Router();
 
 // Public routes
-shopRouter.get("/", getAllShops); // Get all shops
-shopRouter.get("/:id", getShopById); // Get a shop by ID
+shopRouter.get("/", protect, getAllShops); // Get all shops
+shopRouter.get("/:id", protect, getShopById); // Get a shop by ID
 
 // Protected routes
 shopRouter.use(protect); // Protect all routes below this middleware
