@@ -89,28 +89,25 @@ export const updateShopById = asyncHandler(async (req, res, next) => {
   try {
     const shop = await findShopById(req.params.id);
     if (shop) {
-      // const {
-      //   name,
-      //   city,
-      //   mood,
-      //   description,
-      //   category,
-      //   rating,
-      //   location,
-      //   items,
-      // } = req.body;
-
-      // Handle uploaded images, or keep existing images if none are provided
-      // const images =
-      //   req.files && req.files.length > 0
-      //     ? req.files.map((file) => file.path)
-      //     : shop.images;
-
-      const images = req.files
-        ? req.files.map((file) => `http://localhost:8000/${file.path}`)
-        : [];
-
       const location = req.body.location ? JSON.parse(req.body.location) : {};
+
+      // Handle existing images
+      let existingImages = shop.images;
+      if (req.body.existingImages) {
+        if (Array.isArray(req.body.existingImages)) {
+          existingImages = req.body.existingImages;
+        } else if (req.body.existingImages === '[]') {
+          existingImages = [];
+        } else {
+          existingImages = [req.body.existingImages];
+        }
+      }
+
+      // Handle new images
+      const newImages = req.files ? req.files.map((file) => `http://localhost:8000/${file.path}`) : [];
+
+      // Combine existing and new images
+      const images = [...existingImages, ...newImages];
 
       // Update shop details
       const updatedShop = await updateShop(req.params.id, {

@@ -18,6 +18,7 @@ const UpdateShop = () => {
         rating: 0
     });
     const [newImages, setNewImages] = useState([]);
+    const [existingImages, setExistingImages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [updating, setUpdating] = useState(false);
     const navigate = useNavigate();
@@ -51,6 +52,7 @@ const UpdateShop = () => {
                 });
                 if (response.status === 200) {
                     setShop(response.data);
+                    setExistingImages(response.data.images);
                 }
             } catch (error) {
                 if (error.response && error.response.data && error.response.data.error) {
@@ -69,13 +71,13 @@ const UpdateShop = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setUpdating(true);
-
+    
         try {
             if (!shop.name || !shop.city || !shop.address || !shop.category || !shop.description || !shop.location.lat || !shop.location.lng) {
                 toast.error("All fields are required");
                 throw new Error('All fields are required');
             }
-
+    
             const formData = new FormData();
             formData.append('name', shop.name);
             formData.append('city', shop.city);
@@ -83,11 +85,22 @@ const UpdateShop = () => {
             formData.append('category', shop.category);
             formData.append('description', shop.description);
             formData.append('rating', shop.rating);
-            formData.append('location', JSON.stringify(shop.location)); // Stringify location object
+            formData.append('location', JSON.stringify(shop.location));
+    
+            // Append existing images or an empty array if all are removed
+            if (existingImages.length > 0) {
+                existingImages.forEach((image) => {
+                    formData.append('existingImages', image);
+                });
+            } else {
+                formData.append('existingImages', '[]');
+            }
+    
+            // Append new images
             newImages.forEach((image) => {
                 formData.append('images', image);
             });
-
+    
             const userInfo = JSON.parse(localStorage.getItem('userInfo'));
             const response = await axios.put(`${Base_Url}/shops/${shopId}`, formData, {
                 headers: {
@@ -95,6 +108,7 @@ const UpdateShop = () => {
                     'auth-token': `${userInfo.token}`
                 }
             });
+    
             if (response.status === 201) {
                 toast.success('Shop updated successfully!');
                 navigate('/shops');
@@ -109,6 +123,7 @@ const UpdateShop = () => {
             setUpdating(false);
         }
     };
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -116,22 +131,18 @@ const UpdateShop = () => {
     };
 
     const handleImageChange = (e) => {
-        if (newImages.length < 5) {
+        if (existingImages.length + newImages.length + e.target.files.length <= 5) {
             setNewImages([...newImages, ...Array.from(e.target.files)]);
         } else {
             toast.warn('You can only upload up to 5 images');
         }
     };
 
-    const removeImage = (index) => {
-        if (index < shop.images.length) {
-            // Remove previously fetched image
-            const updatedImages = [...shop.images];
-            updatedImages.splice(index, 1);
-            setShop({ ...shop, images: updatedImages });
+    const removeImage = (index, type) => {
+        if (type === 'existing') {
+            setExistingImages(existingImages.filter((_, i) => i !== index));
         } else {
-            // Remove newly added image
-            setNewImages(newImages.filter((_, i) => i !== index - shop.images.length));
+            setNewImages(newImages.filter((_, i) => i !== index));
         }
     };
 
@@ -277,36 +288,36 @@ const UpdateShop = () => {
                         </div>
 
                         <div className="flex flex-wrap gap-2 mb-4">
-                            {/* Display previous images */}
-                            {shop.images.map((image, index) => (
+                            {/* Display existing images */}
+                            {existingImages.map((image, index) => (
                                 <div key={index} className="relative">
                                     <img
                                         src={`${image}`} // Assuming Base_Url is the base URL for image retrieval
                                         alt={`Previous ${index}`}
                                         className="w-20 h-20 object-cover rounded"
                                     />
-                                    {/* Button to remove previous images */}
+                                    {/* Button to remove images */}
                                     <button
                                         type="button"
-                                        onClick={() => removeImage(index)}
+                                        onClick={() => removeImage(index, 'existing')}
                                         className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
                                     >
                                         &times;
                                     </button>
                                 </div>
                             ))}
-                            {/* Display newly selected images */}
+                            {/* Display new images */}
                             {newImages.map((image, index) => (
-                                <div key={index + shop.images.length} className="relative">
+                                <div key={index} className="relative">
                                     <img
                                         src={URL.createObjectURL(image)}
                                         alt={`Preview ${index}`}
                                         className="w-20 h-20 object-cover rounded"
                                     />
-                                    {/* Button to remove newly selected images */}
+                                    {/* Button to remove images */}
                                     <button
                                         type="button"
-                                        onClick={() => removeImage(index)}
+                                        onClick={() => removeImage(index, 'new')}
                                         className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
                                     >
                                         &times;
@@ -339,8 +350,7 @@ const UpdateShop = () => {
                                 name="lng"
                                 value={shop.location.lng}
                                 onChange={handleLngChange}
-                                className="mt-1 p-2 w-full border rounded-md shadow-sm focus:outline-ind
-                                indigo-400 focus:ring-indigo-500 focus:border-indigo-500"
+                                className="mt-1 p-2 w-full border rounded-md shadow-sm focus:outline-indigo-400 focus:ring-indigo-500 focus:border-indigo-500"
                                 required
                             />
                         </div>
