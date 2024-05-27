@@ -100,7 +100,7 @@ const ShopList = () => {
           <div className="shop-list">
             {shops.map(shop => (
               <div key={shop._id} className="shop-item">
-                <div className="shop-image">
+                <div className="shop-image hover:scale-105 transition">
                   <Link to={`/shop/${shop._id}`}>
                   <img src={shop.images[0]} alt={shop.name} />
                   </Link>

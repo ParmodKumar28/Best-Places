@@ -5,6 +5,7 @@ import { FiUser, FiCamera } from 'react-icons/fi';
 import { format } from 'date-fns';
 import Base_Url from '../services/api';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 const AdminProfilePage = () => {
     const [admin, setAdmin] = useState(null);
@@ -145,11 +146,11 @@ const AdminProfilePage = () => {
                 <h3 className="text-2xl font-semibold mb-6">Shops Added By You</h3>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {admin.shops.length > 0 ? admin.shops.map((shop) => (
-                        <li key={shop._id} className="p-6 bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg transition duration-300">
+                        <Link to={`/shop/${shop._id}`} key={shop._id} className="p-6 bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg transition duration-300">
                             <p className="text-lg font-semibold">{shop.name}</p>
                             <p className="text-gray-500">{shop.address}</p>
                             <p className="text-gray-500">Category: {shop.category}</p>
-                        </li>
+                        </Link>
                     )) : <p>No shops added by you!</p>}
                 </ul>
             </div>
