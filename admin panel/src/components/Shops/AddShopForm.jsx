@@ -108,7 +108,7 @@ const AddShopForm = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-md mx-auto my-6 p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-semibold mb-4 text-center">Add Shop</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

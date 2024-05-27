@@ -123,13 +123,13 @@ const Register = () => {
           </div>
           <button
             type="submit"
-            className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 w-full"
+            className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 w-full select-none"
             disabled={loading}
           >
             {loading ? 'Registering...' : 'Register'}
           </button>
         </form>
-        <p className="mt-4 text-center">
+        <p className="mt-4 text-center select-none">
           Already have an account?{' '}
           <Link to="/login" className="text-blue-500">
             Login

@@ -103,7 +103,7 @@ const Login = () => {
             Login
           </button>
         </form>
-        <p className="mt-4 text-center">
+        <p className="mt-4 text-center select-none">
           Don't have an account?{' '}
           <Link to="/register" className="text-blue-500">
             Register

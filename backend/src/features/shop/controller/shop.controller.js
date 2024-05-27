@@ -87,7 +87,6 @@ export const createNewShop = asyncHandler(async (req, res, next) => {
 // Controller to update a shop
 export const updateShopById = asyncHandler(async (req, res, next) => {
   try {
-    console.log(req.params.id);
     const shop = await findShopById(req.params.id);
     if (shop) {
       // const {

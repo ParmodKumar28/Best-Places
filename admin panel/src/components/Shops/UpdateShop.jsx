@@ -148,7 +148,7 @@ const UpdateShop = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center my-6">
             {loading ? (
                 <div className="flex justify-center items-center">
                     <Oval color="#4F46E5" height={40} width={40} />
